@@ -24,12 +24,16 @@ class TowerOfHanoi:
         Args:
             number_of_disks (int, optional): The number of disks for the game. Defaults to 4.
         """
+        # initialize peg0, peg1, peg2
         self.peg0 = []
         self.peg1 = []
         self.peg2 = []
 
-        for i in range(number_of_disks):
-            self.peg0.append(number_of_disks - i)
+        if number_of_disks < 1:
+            print(f"Error: number of disks ({number_of_disks}) not allowed")
+        else:
+            # peg 0 initialized as a list containing specified number of disks, in consecutive descending order
+            self.peg0 = list(range(number_of_disks, 0, -1))
     
     def move(self, source, destination):
         """ Moves the top disk from a source peg to the destiniation peg.
@@ -42,6 +46,7 @@ class TowerOfHanoi:
         Returns:
             boolean: Returns True if the move was made and False otherwise.
         """
+        # A list with indices 0, 1, 2 corresponding with peg0, peg1, peg2
         choose_peg = [self.peg0, self.peg1, self.peg2]
 
         if source not in [0, 1, 2] or destination not in [0, 1, 2]:
@@ -60,6 +65,7 @@ class TowerOfHanoi:
             print(f"Error: source disk size ({choose_peg[source][-1]}) is greater than destination disk size ({choose_peg[destination][-1]})")
             return False
         
+        # Pop last element of source and append it to destination
         choose_peg[destination].append(choose_peg[source].pop())
         return True
 
@@ -76,17 +82,16 @@ class TowerOfHanoi:
         Returns:
             boolean: Returns True if disks (numbers) are in descending order on the third peg and False otherwise.
         """ 
-        if bool(self.peg0) or bool(self.peg1):
+        # Check if peg0 and peg1 are empty
+        if self.peg0 or self.peg1:
             return False
 
-        if not self.peg2:
-            return True
-
+        # Check if first disk is equal to total number of disks
         if self.peg2[0] != len(self.peg2):
             return False
 
+        # Check if peg2 is arranged in consecutive descending order, any disk should be 1 smaller than the previous
         for i in range(1, len(self.peg2)):
-            # print(self.peg2[i], self.peg2[i - 1] - 1)
             if self.peg2[i] != self.peg2[i - 1] - 1:
                 return False
         
@@ -95,14 +100,16 @@ class TowerOfHanoi:
     def reset(self):
         """Resets the Tower of Hanoi to the initial state.
         """
+        # Calculate total number of disks
         num = len(self.peg0) + len(self.peg1) + len(self.peg2)
         
+        # Reset pegs
         self.peg0 = []
         self.peg1 = []
         self.peg2 = []
 
-        for i in range(num):
-            self.peg0.append(num - i)
+        # Repopulate peg0
+        self.peg0 = list(range(num, 0, -1))
 
     def get_state(self):
         """Returns the current state of the Tower.
