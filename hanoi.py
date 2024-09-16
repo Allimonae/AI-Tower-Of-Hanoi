@@ -271,14 +271,18 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
         if source_disk == "_":
             choose_peg[destination].append(choose_peg[source].pop())
             return True
-
-        if dest_disk == "_" and source_disk > self.special:
-            print(f"Error: source disk size ({source_disk}) is greater than destination special disk size ({self.special})")
-            return False
+        
+        if dest_disk == "_":
+            if isinstance(source_disk, int) and source_disk > self.special:
+                print(f"Error: source disk size ({source_disk}) is greater than destination special disk size ({self.special})")
+                return False
+            choose_peg[destination].append(choose_peg[source].pop())
+            return True
        
-        if choose_peg[destination] and source_disk > dest_disk:
-            print(f"Error: source disk size ({source_disk}) is greater than destination disk size ({dest_disk})")
-            return False
+        if isinstance(dest_disk, int) and isinstance(source_disk, int):
+            if source_disk > dest_disk:
+                print(f"Error: source disk size ({source_disk}) is greater than destination disk size ({dest_disk})")
+                return False
         
         # Pop last element of source and append it to destination
         choose_peg[destination].append(choose_peg[source].pop())
@@ -295,16 +299,19 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
         """ 
         # Check if peg0 and peg1 are empty or contain only "_"
         if (self.peg0 and self.peg0 != ["_"]) or (self.peg1 and self.peg1 != ["_"]):
+            print(f"Error: peg0 or peg1 is not empty or ['_']")
             return False
 
         length = self.num_disks + (1 if "_" in self.peg2 else 0)
         if len(self.peg2) != length:
+            print(f"Error: peg2 doesn't have expected length ({len(self.peg2)})")
             return False
 
         # Check if peg2 is arranged in consecutive descending order, ignore position of special
         disks = list(filter(lambda disk: disk != "_", self.peg2))
         for i in range(len(disks)):
             if disks[i] != self.num_disks - i:
+                print(f"Error: Disks are out of order")
                 return False
         
         return True
@@ -326,7 +333,7 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
             print(f"Error: number of disks or k not yet set")
 
 def main():
-    tower = SpecialDiskTowerOfHanoi(4)
+    tower = SpecialDiskTowerOfHanoi(4, 2)
     TTTowerOfHanoi.print_state(tower)
     tower.print_state()
     print(tower.move(0, 4))
