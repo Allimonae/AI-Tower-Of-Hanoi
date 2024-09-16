@@ -32,6 +32,7 @@ class TowerOfHanoi:
         if number_of_disks < 1:
             print(f"Error: number of disks ({number_of_disks}) not allowed")
         else:
+            self.num_disks = number_of_disks
             # peg 0 initialized as a list containing specified number of disks, in consecutive descending order
             self.peg0 = list(range(number_of_disks, 0, -1))
     
@@ -86,30 +87,30 @@ class TowerOfHanoi:
         if self.peg0 or self.peg1:
             return False
 
-        # Check if first disk is equal to total number of disks
-        if self.peg2[0] != len(self.peg2):
+        # Check length if length of peg2 equals num_disks
+        if len(self.peg2) != self.num_disks:
             return False
 
         # Check if peg2 is arranged in consecutive descending order, any disk should be 1 smaller than the previous
-        for i in range(1, len(self.peg2)):
-            if self.peg2[i] != self.peg2[i - 1] - 1:
+        for i in range(self.num_disks):
+            if self.peg2[i] != self.num_disks - i:
                 return False
         
         return True
 
     def reset(self):
         """Resets the Tower of Hanoi to the initial state.
-        """
-        # Calculate total number of disks
-        num = len(self.peg0) + len(self.peg1) + len(self.peg2)
-        
+        """       
         # Reset pegs
         self.peg0 = []
         self.peg1 = []
         self.peg2 = []
 
         # Repopulate peg0
-        self.peg0 = list(range(num, 0, -1))
+        if self.num_disks:
+            self.peg0 = list(range(self.num_disks, 0, -1))
+        else:
+            print(f"Error: number of disks not yet set")
 
     def get_state(self):
         """Returns the current state of the Tower.
@@ -119,30 +120,120 @@ class TowerOfHanoi:
         """
         return [self.peg0, self.peg1, self.peg2]
 
-def main():
-    tower = TowerOfHanoi(4)
-    TowerOfHanoi.print_state(tower)
-    print(TowerOfHanoi.move(tower, 0, 4))
-    print(TowerOfHanoi.move(tower, 0, 0))
-    print(TowerOfHanoi.move(tower, 1, 2))
-    print(TowerOfHanoi.move(tower, 0, 1))
-    print(TowerOfHanoi.move(tower, 2, 0))
-    print(TowerOfHanoi.move(tower, 2, 1))
-    print(TowerOfHanoi.move(tower, 0, 1))
-    TowerOfHanoi.print_state(tower)
-    # print(TowerOfHanoi.move(tower, 0, 2))
-    print(TowerOfHanoi.move(tower, 1, 2))
-    print(TowerOfHanoi.move(tower, 1, 0))
-    print(TowerOfHanoi.move(tower, 2, 0))
-    print(TowerOfHanoi.move(tower, 1, 2))
-    print(TowerOfHanoi.move(tower, 0, 1))
-    print(TowerOfHanoi.move(tower, 0, 2))
-    print(TowerOfHanoi.move(tower, 1, 2))
+class TTTowerOfHanoi(TowerOfHanoi):
+    """There are three pegs, numbers 1-number of disks are used instead of disks,
+       where a bigger number is a bigger disk.
 
-    # TowerOfHanoi.reset(tower)
-    # print("reset:", TowerOfHanoi.is_goal(tower))
-    # print(TowerOfHanoi.get_state(tower))
-    print("goal: ", TowerOfHanoi.is_goal(tower))
+       TTTowerOfHanoi is the same as the original problem, except there are 3 disks of each size,
+       and a disk may be placed on one of the same size or a larger one
+
+       Example initial state with 3 sizes of disks:
+       Peg 0: [3, 3, 3, 2, 2, 2, 1, 1, 1]
+       Peg 1: []
+       Peg 2: []
+
+       Goal state for example:
+       Peg 0: []
+       Peg 1: []
+       Peg 2: [3, 3, 3, 2, 2, 2, 1, 1, 1]
+    """
+    def __init__(self, number_of_disks = 4):
+        """Constructor for TTTowerOfHanoi
+
+        Args:
+            number_of_disks (int, optional): The number of disk sizes for the game. Defaults to 4.
+        """
+        # initialize peg0, peg1, peg2
+        self.peg0 = []
+        self.peg1 = []
+        self.peg2 = []
+
+        if number_of_disks < 1:
+            print(f"Error: number of disks ({number_of_disks}) not allowed")
+        else:
+            self.num_disks = number_of_disks
+            # peg 0 initialized as a list containing specified number of disks, 3 disks of each size
+            for i in range(number_of_disks):
+                for n in range(3):
+                    self.peg0.append(number_of_disks - i)
+
+    def is_goal(self):
+        """Checks whether the current state of the puzzle is the goal state.
+
+        Returns:
+            boolean: Returns True if disks (numbers) are in descending order on the third peg and False otherwise.
+        """
+        # Check if peg0 and peg1 are empty
+        if self.peg0 or self.peg1:
+            return False
+
+        # Check length if length of peg2 equals num_disks * 3
+        if len(self.peg2) != self.num_disks * 3:
+            return False
+
+        # Check if peg2 is arranged in consecutive descending order, with 3 of each disk size
+        for i in range(0, self.num_disks):
+            for j in range(3):
+                if self.peg2[3 * i + j] != self.num_disks - i:
+                    return False
+            
+        return True
+
+    def reset(self):
+        """Resets the Tower of Hanoi to the initial state.
+        """
+        # Reset pegs
+        self.peg0 = []
+        self.peg1 = []
+        self.peg2 = []
+
+        # Repopulate peg0
+        if self.num_disks:
+            for i in range(self.num_disks):
+                for n in range(3):
+                    self.peg0.append(self.num_disks - i)
+        else:
+            print(f"Error: number of disks not yet set")
+
+def main():
+    tower = TTTowerOfHanoi(4)
+    TTTowerOfHanoi.print_state(tower)
+    tower.print_state()
+    print(tower.move(0, 4))
+    tower.print_state()
+    print(tower.move(0, 0))
+    tower.print_state()
+    print(tower.move(1, 2))
+    tower.print_state()
+    print(tower.move(0, 1))
+    tower.print_state()
+    print(tower.move(2, 0))
+    tower.print_state()
+    print(tower.move(2, 1))
+    tower.print_state()
+    print(tower.move(0, 1))
+    tower.print_state()
+    tower.print_state()
+    # print(tower.move(0, 2))
+    tower.print_state()
+    print(tower.move(1, 2))
+    tower.print_state()
+    print(tower.move(1, 0))
+    tower.print_state()
+    print(tower.move(2, 0))
+    tower.print_state()
+    print(tower.move(1, 2))
+    tower.print_state()
+    print(tower.move(0, 1))
+    tower.print_state()
+    print(tower.move(0, 2))
+    tower.print_state()
+    print(tower.move(1, 2))
+    print("checking")
+    tower.print_state()
+    print("goal: ", tower.is_goal())
+    tower.reset()
+    tower.print_state()
 
 if __name__ == "__main__":
     main()
