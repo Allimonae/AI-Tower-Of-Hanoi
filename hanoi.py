@@ -304,14 +304,12 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
 
         length = self.num_disks + (1 if "_" in self.peg2 else 0)
         if len(self.peg2) != length:
-            print(f"Error: peg2 doesn't have expected length ({len(self.peg2)})")
             return False
 
         # Check if peg2 is arranged in consecutive descending order, ignore position of special
         disks = list(filter(lambda disk: disk != "_", self.peg2))
         for i in range(len(disks)):
             if disks[i] != self.num_disks - i:
-                print(f"Error: Disks are out of order")
                 return False
         
         return True
@@ -333,19 +331,19 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
             print(f"Error: number of disks or k not yet set")
 
 def play_game():
-    version = str(input(
+    version = input(
         "What version of Tower of Hanoi would you like to play?\n"
         "“o” for original version\n"
         "“t” for triple version\n"
         "“s” for special disk version\n"
-    ))
+    )
 
-    num_disks = int(input("How many disks would you like?\n"))
+    num_disks = input("How many disks would you like?\n")
 
     if version == "t":
         tower = TTTowerOfHanoi(num_disks)
     elif version == "s":
-        k = int(input("What value would you like for k?\n"))
+        k = input("What value would you like for k?\n")
         tower = SpecialDiskTowerOfHanoi(num_disks, k)
     else:
         tower = TowerOfHanoi(num_disks)
