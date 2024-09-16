@@ -195,6 +195,62 @@ class TTTowerOfHanoi(TowerOfHanoi):
         else:
             print(f"Error: number of disks not yet set")
 
+class SpecialTowerOfHanoi(TowerOfHanoi):
+    def __init__(self, number_of_disks, k = 0):
+        self.peg0 = []
+        self.peg1 = []
+        self.peg2 = []
+
+        if number_of_disks < 1:
+            print(f"Error: number of disks ({number_of_disks}) not allowed")
+        if k > number_of_disks:
+            print(f"Error: k ({k}) out of range")
+        else:
+            self.num_disks = number_of_disks
+            self.special = k
+            # peg 0 initialized as a list containing specified number of disks, in consecutive descending order
+            self.peg0 = list(range(number_of_disks, 0, -1))
+            self.peg2.append("_")
+
+    def move(self, source, destination):
+        """ Moves the top disk from a source peg to the destiniation peg.
+            No bigger disk may be placed on stop of a smaller one. 
+
+            The	special	disk can be	placed on any disk, but	the	only disks that	can	be placed on top of	the	special	disk 
+            are	those whose	number are no more than	k, and k ≤ number of disks in the game.
+        Args:
+            source (int): The number of the peg to move a disk from. Possible values are 0, 1, or 2.
+            destination (int): The number of the peg to move a disk to. Possible values are 0, 1, or 2.
+
+        Returns:
+            boolean: Returns True if the move was made and False otherwise.
+        """
+        # A list with indices 0, 1, 2 corresponding with peg0, peg1, peg2
+        choose_peg = [self.peg0, self.peg1, self.peg2]
+
+        if source not in [0, 1, 2] or destination not in [0, 1, 2]:
+            print(f"Error: source peg ({source}) or destination peg ({destination}) out of range")
+            return False
+
+        if source == destination:
+            print(f"Error: source peg ({source}) == destination peg ({destination})")
+            return False
+        
+        if not choose_peg[source]:
+            print(f"Error: source peg ({source}) is empty")
+            return False
+
+        if choose_peg[source][-1] == "_" and choose_peg[source][-1] > choose_peg[destination][-1]:
+
+
+        if choose_peg[destination] and choose_peg[source][-1] > choose_peg[destination][-1]:
+            print(f"Error: source disk size ({choose_peg[source][-1]}) is greater than destination disk size ({choose_peg[destination][-1]})")
+            return False
+        
+        # Pop last element of source and append it to destination
+        choose_peg[destination].append(choose_peg[source].pop())
+        return True
+
 def main():
     tower = TTTowerOfHanoi(4)
     TTTowerOfHanoi.print_state(tower)
