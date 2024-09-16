@@ -195,7 +195,7 @@ class TTTowerOfHanoi(TowerOfHanoi):
         else:
             print(f"Error: number of disks not yet set")
 
-class SpecialTowerOfHanoi(TowerOfHanoi):
+class SpecialDiskTowerOfHanoi(TowerOfHanoi):
     """There are three pegs, numbers 1-number of disks are used instead of disks, 
        where a bigger number is a bigger disk.
 
@@ -308,9 +308,25 @@ class SpecialTowerOfHanoi(TowerOfHanoi):
                 return False
         
         return True
+    
+    def reset(self):
+        """Resets the Tower of Hanoi to the initial state.
+        """       
+        # Reset pegs
+        self.peg0 = []
+        self.peg1 = []
+        self.peg2 = []
+
+        # Repopulate peg0
+        if self.num_disks:
+            # peg 0 initialized as a list containing specified number of disks, in consecutive descending order
+            self.peg0 = list(range(self.num_disks, 0, -1))
+            self.peg1.append("_")
+        else:
+            print(f"Error: number of disks or k not yet set")
 
 def main():
-    tower = SpecialTowerOfHanoi(4)
+    tower = SpecialDiskTowerOfHanoi(4)
     TTTowerOfHanoi.print_state(tower)
     tower.print_state()
     print(tower.move(0, 4))
@@ -345,7 +361,7 @@ def main():
     print(tower.move(1, 2))
     tower.print_state()
     print("goal: ", tower.is_goal())
-    # tower.reset()
+    tower.reset()
     tower.print_state()
 
 if __name__ == "__main__":
