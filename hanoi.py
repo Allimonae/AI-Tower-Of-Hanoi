@@ -332,44 +332,83 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
         else:
             print(f"Error: number of disks or k not yet set")
 
+def play_game():
+    version = str(input(
+        "What version of Tower of Hanoi would you like to play?\n"
+        "“o” for original version\n"
+        "“t” for triple version\n"
+        "“s” for special disk version\n"
+    ))
+
+    num_disks = int(input("How many disks would you like?\n"))
+
+    if version == "t":
+        tower = TTTowerOfHanoi(num_disks)
+    elif version == "s":
+        k = int(input("What value would you like for k?\n"))
+        tower = SpecialDiskTowerOfHanoi(num_disks, k)
+    else:
+        tower = TowerOfHanoi(num_disks)
+    
+    num_moves = 0
+    start_time = time.time()
+
+    tower.print_state()
+    while not tower.is_goal():
+        source_dest = input("Enter a source and destination peg [source,destination]: ")
+        source, dest = map(int,source_dest.split(",")) 
+        legal_move = tower.move(source, dest)
+        print(f"Move a disk from ({source}) to ({dest}): ", legal_move)
+        if legal_move:
+            num_moves += 1
+        else:
+            print("Illegal move")
+        tower.print_state()
+        print("\n")
+    
+    end_time = time.time()
+    elapsed_time = round(end_time - start_time)
+    print(f"HOORAY! You won Tower of Hanoi in {num_moves} moves and it took you {elapsed_time} seconds!")
+
 def main():
     tower = SpecialDiskTowerOfHanoi(4, 2)
-    TTTowerOfHanoi.print_state(tower)
-    tower.print_state()
-    print(tower.move(0, 4))
-    tower.print_state()
-    print(tower.move(0, 0))
-    tower.print_state()
-    print(tower.move(1, 2))
-    tower.print_state()
-    print(tower.move(0, 1))
-    tower.print_state()
-    print(tower.move(2, 0))
-    tower.print_state()
-    print(tower.move(2, 1))
-    tower.print_state()
-    print(tower.move(0, 1))
-    tower.print_state()
-    tower.print_state()
+    play_game()
+    # TTTowerOfHanoi.print_state(tower)
+    # tower.print_state()
+    # print(tower.move(0, 4))
+    # tower.print_state()
+    # print(tower.move(0, 0))
+    # tower.print_state()
+    # print(tower.move(1, 2))
+    # tower.print_state()
+    # print(tower.move(0, 1))
+    # tower.print_state()
+    # print(tower.move(2, 0))
+    # tower.print_state()
+    # print(tower.move(2, 1))
+    # tower.print_state()
+    # print(tower.move(0, 1))
+    # tower.print_state()
+    # tower.print_state()
+    # # print(tower.move(0, 2))
+    # tower.print_state()
+    # print(tower.move(1, 2))
+    # tower.print_state()
+    # print(tower.move(1, 0))
+    # tower.print_state()
+    # print(tower.move(2, 0))
+    # tower.print_state()
+    # print(tower.move(1, 2))
+    # tower.print_state()
+    # print(tower.move(0, 1))
+    # tower.print_state()
     # print(tower.move(0, 2))
-    tower.print_state()
-    print(tower.move(1, 2))
-    tower.print_state()
-    print(tower.move(1, 0))
-    tower.print_state()
-    print(tower.move(2, 0))
-    tower.print_state()
-    print(tower.move(1, 2))
-    tower.print_state()
-    print(tower.move(0, 1))
-    tower.print_state()
-    print(tower.move(0, 2))
-    tower.print_state()
-    print(tower.move(1, 2))
-    tower.print_state()
-    print("goal: ", tower.is_goal())
-    tower.reset()
-    tower.print_state()
+    # tower.print_state()
+    # print(tower.move(1, 2))
+    # tower.print_state()
+    # print("goal: ", tower.is_goal())
+    # tower.reset()
+    # tower.print_state()
 
 if __name__ == "__main__":
     main()
