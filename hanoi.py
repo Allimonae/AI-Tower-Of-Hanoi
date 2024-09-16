@@ -196,21 +196,45 @@ class TTTowerOfHanoi(TowerOfHanoi):
             print(f"Error: number of disks not yet set")
 
 class SpecialTowerOfHanoi(TowerOfHanoi):
+    """There are three pegs, numbers 1-number of disks are used instead of disks, 
+       where a bigger number is a bigger disk.
+
+       In this version of the problem, there are no	triple disks, 
+       but there is a special disk that is initially alone on the second peg
+       
+       Use	 “_” to	 represent the special disk.	 
+
+       Example initial state with 3 disks and k = 2:
+       Peg 0: [3, 2, 1]
+       Peg 1: ["_"]
+       Peg 2: []
+
+       Goal state for example:
+       Peg 0: []
+       Peg 1: []
+       Peg 2: [3, 2, "_", 1]
+    """
     def __init__(self, number_of_disks, k = 0):
+        """Constructor for TowerOfHanoi
+
+        Args:
+            number_of_disks (int, optional): The number of disks for the game. Defaults to 4.
+            k (int, optional): The size of the special disk
+        """
         self.peg0 = []
         self.peg1 = []
         self.peg2 = []
 
         if number_of_disks < 1:
             print(f"Error: number of disks ({number_of_disks}) not allowed")
-        if k > number_of_disks:
+        if k > number_of_disks or k < 0:
             print(f"Error: k ({k}) out of range")
         else:
             self.num_disks = number_of_disks
             self.special = k
             # peg 0 initialized as a list containing specified number of disks, in consecutive descending order
             self.peg0 = list(range(number_of_disks, 0, -1))
-            self.peg2.append("_")
+            self.peg1.append("_")
 
     def move(self, source, destination):
         """ Moves the top disk from a source peg to the destiniation peg.
@@ -218,6 +242,7 @@ class SpecialTowerOfHanoi(TowerOfHanoi):
 
             The	special	disk can be	placed on any disk, but	the	only disks that	can	be placed on top of	the	special	disk 
             are	those whose	number are no more than	k, and k ≤ number of disks in the game.
+
         Args:
             source (int): The number of the peg to move a disk from. Possible values are 0, 1, or 2.
             destination (int): The number of the peg to move a disk to. Possible values are 0, 1, or 2.
@@ -239,20 +264,53 @@ class SpecialTowerOfHanoi(TowerOfHanoi):
         if not choose_peg[source]:
             print(f"Error: source peg ({source}) is empty")
             return False
+        
+        source_disk = choose_peg[source][-1]
+        dest_disk = choose_peg[destination][-1] if choose_peg[destination] else None
+        
+        if source_disk == "_":
+            choose_peg[destination].append(choose_peg[source].pop())
+            return True
 
-        if choose_peg[source][-1] == "_" and choose_peg[source][-1] > choose_peg[destination][-1]:
-
-
-        if choose_peg[destination] and choose_peg[source][-1] > choose_peg[destination][-1]:
-            print(f"Error: source disk size ({choose_peg[source][-1]}) is greater than destination disk size ({choose_peg[destination][-1]})")
+        if dest_disk == "_" and source_disk > self.special:
+            print(f"Error: source disk size ({source_disk}) is greater than destination special disk size ({self.special})")
+            return False
+       
+        if choose_peg[destination] and source_disk > dest_disk:
+            print(f"Error: source disk size ({source_disk}) is greater than destination disk size ({dest_disk})")
             return False
         
         # Pop last element of source and append it to destination
         choose_peg[destination].append(choose_peg[source].pop())
         return True
+    
+    def is_goal(self):
+        """Checks whether the current state of the puzzle is the goal state.
+
+            The	special disk should	be ignored by the function that	checks for the goal	state but should meet	
+            all	the	base conditions	for	the	original game once it ignores the special disk.
+
+        Returns:
+            boolean: Returns True if disks (numbers) are in descending order on the third peg and False otherwise.
+        """ 
+        # Check if peg0 and peg1 are empty or contain only "_"
+        if (self.peg0 and self.peg0 != ["_"]) or (self.peg1 and self.peg1 != ["_"]):
+            return False
+
+        length = self.num_disks + (1 if "_" in self.peg2 else 0)
+        if len(self.peg2) != length:
+            return False
+
+        # Check if peg2 is arranged in consecutive descending order, ignore position of special
+        disks = list(filter(lambda disk: disk != "_", self.peg2))
+        for i in range(len(disks)):
+            if disks[i] != self.num_disks - i:
+                return False
+        
+        return True
 
 def main():
-    tower = TTTowerOfHanoi(4)
+    tower = SpecialTowerOfHanoi(4)
     TTTowerOfHanoi.print_state(tower)
     tower.print_state()
     print(tower.move(0, 4))
@@ -285,10 +343,9 @@ def main():
     print(tower.move(0, 2))
     tower.print_state()
     print(tower.move(1, 2))
-    print("checking")
     tower.print_state()
     print("goal: ", tower.is_goal())
-    tower.reset()
+    # tower.reset()
     tower.print_state()
 
 if __name__ == "__main__":
