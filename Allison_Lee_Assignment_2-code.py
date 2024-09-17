@@ -36,6 +36,7 @@ class TowerOfHanoi:
             print(f"Error: number of disks ({number_of_disks}) not allowed")
         else:
             self.num_disks = number_of_disks
+
             # peg 0 initialized as a list containing specified number of disks, in consecutive descending order
             self.peg0 = list(range(number_of_disks, 0, -1))
     
@@ -122,6 +123,41 @@ class TowerOfHanoi:
             list: List containing three lists representing each peg in ascending order of peg number.
         """
         return [self.peg0, self.peg1, self.peg2]
+    
+    def solve(self):
+        """Solves TowerOfHanoi. Makes a list of moves to get to goal.
+
+        Returns:
+            list: List of moves it took to solve puzzle, where each move is the tuple (source, destination)
+        """
+        def solve_helper(n, source, aux, dest, move_list):
+            """Helper function for solve
+
+            Args:
+                n (int): An integer for number of disks
+                source (list): A list of integers representing the disks in the default source peg
+                aux (list): A list of integers representing the disks in the auxilary peg
+                dest (list): A list of integers representing the disks in the destination peg
+                move_list (list): A list of tuples representing moves from a source peg to a destination peg
+            """
+            # Base case: move a single disk from source to destination
+            if n == 1:
+                if self.move(source, dest):
+                    move_list.append((source, dest))
+            else:
+                # Recursively move n - 1 disks from source to aux peg
+                solve_helper(n - 1, source, dest, aux, move_list)
+
+                # Move nth disk from source to destination
+                if self.move(source, dest):
+                    move_list.append((source, dest))
+
+                # Move n - 1 disks from aux to dest peg
+                solve_helper(n - 1, aux, source, dest, move_list)
+        
+        move_list = []
+        solve_helper(self.num_disks, 0, 1, 2, move_list)
+        return move_list
 
 class TTTowerOfHanoi(TowerOfHanoi):
     """There are three pegs, numbers 1-number of disks are used instead of disks,
@@ -198,6 +234,39 @@ class TTTowerOfHanoi(TowerOfHanoi):
         else:
             print(f"Error: number of disks not yet set")
 
+    def solve(self):
+        """Solves TTTowerOfHanoi. Makes a list of moves to get to goal.
+
+        Returns:
+            list: List of moves it took to solve puzzle, where each move is the tuple (source, destination)
+        """
+        def solve_helper(n, source, aux, dest, move_list):
+            """Helper function for solve
+
+            Args:
+                n (int): An integer for number of disks
+                source (list): A list of integers representing the disks in the default source peg
+                aux (list): A list of integers representing the disks in the auxilary peg
+                dest (list): A list of integers representing the disks in the destination peg
+                move_list (list): A list of tuples representing moves from a source peg to a destination peg
+            """
+            if n == 0:
+                return
+            else:
+                # Recursively move n - 1 disks from source to aux peg
+                solve_helper(n - 1, source, dest, aux)
+
+                # Move nth disk from source to destination
+                if self.move(source, dest):
+                    move_list.append((source, dest))
+
+                # Move n - 1 disks from aux to dest peg
+                solve_helper(n - 1, aux, source, dest)
+          
+        move_list = []
+        solve_helper(self.num_disks, 0, 1, 2, move_list)
+        return move_list
+
 class SpecialDiskTowerOfHanoi(TowerOfHanoi):
     """There are three pegs, numbers 1-number of disks are used instead of disks, 
        where a bigger number is a bigger disk.
@@ -224,6 +293,7 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
             number_of_disks (int, optional): The number of disks for the game. Defaults to 4.
             k (int, optional): The size of the special disk
         """
+        # initialize peg0, peg1, peg2
         self.peg0 = []
         self.peg1 = []
         self.peg2 = []
@@ -235,6 +305,7 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
         else:
             self.num_disks = number_of_disks
             self.special = k
+
             # peg 0 initialized as a list containing specified number of disks, in consecutive descending order
             self.peg0 = list(range(number_of_disks, 0, -1))
             self.peg1.append("_")
@@ -271,14 +342,18 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
         source_disk = choose_peg[source][-1]
         dest_disk = choose_peg[destination][-1] if choose_peg[destination] else None
         
+        # Special disk can go on top of any size disk
         if source_disk == "_":
             choose_peg[destination].append(choose_peg[source].pop())
             return True
         
+        # Only smaller disks can go on top of special disk
         if dest_disk == "_":
             if isinstance(source_disk, int) and source_disk > self.special:
                 print(f"Error: source disk size ({source_disk}) is greater than destination special disk size ({self.special})")
                 return False
+            
+            # Pop last element of source and append it to destination
             choose_peg[destination].append(choose_peg[source].pop())
             return True
        
@@ -304,6 +379,7 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
         if (self.peg0 and self.peg0 != ["_"]) or (self.peg1 and self.peg1 != ["_"]):
             return False
 
+        # Check length if length of peg2 equals num_disks or num_disk + 1 if contains "_"
         length = self.num_disks + (1 if "_" in self.peg2 else 0)
         if len(self.peg2) != length:
             return False
@@ -326,7 +402,6 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
 
         # Repopulate peg0
         if self.num_disks:
-            # peg 0 initialized as a list containing specified number of disks, in consecutive descending order
             self.peg0 = list(range(self.num_disks, 0, -1))
             self.peg1.append("_")
         else:
@@ -395,44 +470,27 @@ def play_game():
     print(f"HOORAY! You won Tower of Hanoi in {num_moves} moves and it took you {elapsed_time} seconds!")
 
 def main():
-    tower = SpecialDiskTowerOfHanoi(4, 2)
-    play_game()
-    # TTTowerOfHanoi.print_state(tower)
-    # tower.print_state()
-    # print(tower.move(0, 4))
-    # tower.print_state()
-    # print(tower.move(0, 0))
-    # tower.print_state()
-    # print(tower.move(1, 2))
-    # tower.print_state()
+    tower = TowerOfHanoi(4)
+    # play_game()
+    # TowerOfHanoi.print_state(tower)
     # print(tower.move(0, 1))
-    # tower.print_state()
-    # print(tower.move(2, 0))
-    # tower.print_state()
-    # print(tower.move(2, 1))
-    # tower.print_state()
-    # print(tower.move(0, 1))
-    # tower.print_state()
-    # tower.print_state()
-    # # print(tower.move(0, 2))
-    # tower.print_state()
-    # print(tower.move(1, 2))
-    # tower.print_state()
-    # print(tower.move(1, 0))
-    # tower.print_state()
-    # print(tower.move(2, 0))
-    # tower.print_state()
-    # print(tower.move(1, 2))
-    # tower.print_state()
-    # print(tower.move(0, 1))
-    # tower.print_state()
     # print(tower.move(0, 2))
-    # tower.print_state()
     # print(tower.move(1, 2))
-    # tower.print_state()
-    # print("goal: ", tower.is_goal())
+    # print(tower.move(0, 1))
+    # print(tower.move(2, 0))
+    # print(tower.move(2, 1))
+    # print(tower.move(0, 1))
+    # print(tower.move(0, 2))
+    # print(tower.move(1, 2))
+    # print(tower.move(1, 0))
+    # print(tower.move(2, 0))
+    # print(tower.move(1, 2))
+    # print(tower.move(0, 1))
+    # print(tower.move(0, 2))
+    # print(tower.move(1, 2))
+    print(tower.solve())
+    print("goal: ", tower.is_goal())
     # tower.reset()
-    # tower.print_state()
 
 if __name__ == "__main__":
     main()
