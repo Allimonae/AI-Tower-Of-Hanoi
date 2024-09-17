@@ -124,40 +124,40 @@ class TowerOfHanoi:
         """
         return [self.peg0, self.peg1, self.peg2]
     
-    def solve(self):
-        """Solves TowerOfHanoi. Makes a list of moves to get to goal.
+    # def solve(self):
+    #     """Solves TowerOfHanoi. Makes a list of moves to get to goal.
 
-        Returns:
-            list: List of moves it took to solve puzzle, where each move is the tuple (source, destination)
-        """
-        def solve_helper(n, source, aux, dest, move_list):
-            """Helper function for solve
+    #     Returns:
+    #         list: List of moves it took to solve puzzle, where each move is the tuple (source, destination)
+    #     """
+    #     def solve_helper(n, source, aux, dest, move_list):
+    #         """Helper function for solve
 
-            Args:
-                n (int): An integer for number of disks
-                source (list): A list of integers representing the disks in the default source peg
-                aux (list): A list of integers representing the disks in the auxilary peg
-                dest (list): A list of integers representing the disks in the destination peg
-                move_list (list): A list of tuples representing moves from a source peg to a destination peg
-            """
-            # Base case: move a single disk from source to destination
-            if n == 1:
-                if self.move(source, dest):
-                    move_list.append((source, dest))
-            else:
-                # Recursively move n - 1 disks from source to aux peg
-                solve_helper(n - 1, source, dest, aux, move_list)
+    #         Args:
+    #             n (int): An integer for number of disks
+    #             source (list): A list of integers representing the disks in the default source peg
+    #             aux (list): A list of integers representing the disks in the auxilary peg
+    #             dest (list): A list of integers representing the disks in the destination peg
+    #             move_list (list): A list of tuples representing moves from a source peg to a destination peg
+    #         """
+    #         # Base case: move a single disk from source to destination
+    #         if n == 1:
+    #             if self.move(source, dest):
+    #                 move_list.append((source, dest))
+    #         else:
+    #             # Recursively move n - 1 disks from source to aux peg
+    #             solve_helper(n - 1, source, dest, aux, move_list)
 
-                # Move nth disk from source to destination
-                if self.move(source, dest):
-                    move_list.append((source, dest))
+    #             # Move nth disk from source to destination
+    #             if self.move(source, dest):
+    #                 move_list.append((source, dest))
 
-                # Move n - 1 disks from aux to dest peg
-                solve_helper(n - 1, aux, source, dest, move_list)
+    #             # Move n - 1 disks from aux to dest peg
+    #             solve_helper(n - 1, aux, source, dest, move_list)
         
-        move_list = []
-        solve_helper(self.num_disks, 0, 1, 2, move_list)
-        return move_list
+    #     move_list = []
+    #     solve_helper(self.num_disks, 0, 1, 2, move_list)
+    #     return move_list
 
 class TTTowerOfHanoi(TowerOfHanoi):
     """There are three pegs, numbers 1-number of disks are used instead of disks,
@@ -234,38 +234,38 @@ class TTTowerOfHanoi(TowerOfHanoi):
         else:
             print(f"Error: number of disks not yet set")
 
-    def solve(self):
-        """Solves TTTowerOfHanoi. Makes a list of moves to get to goal.
+    # def solve(self):
+    #     """Solves TTTowerOfHanoi. Makes a list of moves to get to goal.
 
-        Returns:
-            list: List of moves it took to solve puzzle, where each move is the tuple (source, destination)
-        """
-        def solve_helper(n, source, aux, dest, move_list):
-            """Helper function for solve
+    #     Returns:
+    #         list: List of moves it took to solve puzzle, where each move is the tuple (source, destination)
+    #     """
+    #     def solve_helper(n, source, aux, dest, move_list):
+    #         """Helper function for solve
 
-            Args:
-                n (int): An integer for number of disks
-                source (list): A list of integers representing the disks in the default source peg
-                aux (list): A list of integers representing the disks in the auxilary peg
-                dest (list): A list of integers representing the disks in the destination peg
-                move_list (list): A list of tuples representing moves from a source peg to a destination peg
-            """
-            if n == 0:
-                return
-            else:
-                # Recursively move n - 1 disks from source to aux peg
-                solve_helper(n - 1, source, dest, aux)
+    #         Args:
+    #             n (int): An integer for number of disks
+    #             source (list): A list of integers representing the disks in the default source peg
+    #             aux (list): A list of integers representing the disks in the auxilary peg
+    #             dest (list): A list of integers representing the disks in the destination peg
+    #             move_list (list): A list of tuples representing moves from a source peg to a destination peg
+    #         """
+    #         if n == 0:
+    #             return
+    #         else:
+    #             # Recursively move n - 1 disks from source to aux peg
+    #             solve_helper(n - 1, source, dest, aux)
 
-                # Move nth disk from source to destination
-                if self.move(source, dest):
-                    move_list.append((source, dest))
+    #             # Move nth disk from source to destination
+    #             if self.move(source, dest):
+    #                 move_list.append((source, dest))
 
-                # Move n - 1 disks from aux to dest peg
-                solve_helper(n - 1, aux, source, dest)
+    #             # Move n - 1 disks from aux to dest peg
+    #             solve_helper(n - 1, aux, source, dest)
           
-        move_list = []
-        solve_helper(self.num_disks, 0, 1, 2, move_list)
-        return move_list
+    #     move_list = []
+    #     solve_helper(self.num_disks, 0, 1, 2, move_list)
+    #     return move_list
 
 class SpecialDiskTowerOfHanoi(TowerOfHanoi):
     """There are three pegs, numbers 1-number of disks are used instead of disks, 
