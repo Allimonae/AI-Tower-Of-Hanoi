@@ -1,3 +1,7 @@
+"""
+Date: September 16, 2024
+Programming Language: Python
+"""
 import time
 
 class TowerOfHanoi:
@@ -17,7 +21,6 @@ class TowerOfHanoi:
        Peg 1: []
        Peg 2: [3, 2, 1]
     """
-
     def __init__(self, number_of_disks = 4):
         """Constructor for TowerOfHanoi
 
@@ -330,15 +333,22 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
             print(f"Error: number of disks or k not yet set")
 
 def play_game():
+    """Game interface for Tower of Hanoi
+
+       Play a game of Tower of Hanoi with the choice of original version, 
+       triple version, or special disk version
+    
+    """
+    # Asks the user which version of Tower of Hanoi they want to play
     version = input(
         "What version of Tower of Hanoi would you like to play?\n"
         "“o” for original version\n"
         "“t” for triple version\n"
         "“s” for special disk version\n"
+        "Default to original if anything else\n"
     )
-    if version not in ["o", "t", "s"]:
-        version = "o"
 
+    # Asks the user how many disks they would like
     num_disks = int(input("How many disks would you like?\n"))
 
     if version == "t":
@@ -347,22 +357,32 @@ def play_game():
         k = int(input("What value would you like for k?\n"))
         tower = SpecialDiskTowerOfHanoi(num_disks, k)
     else:
+        # Default to original if anything else
         tower = TowerOfHanoi(num_disks)
     
+    # keep track of move count and time elapsed
     num_moves = 0
     start_time = time.time()
 
     tower.print_state()
 
+    # Game keeps going until goal is met
     while not tower.is_goal():
+
+        # Ask the user for the source peg and the destination peg. 
+        # The input format	must be	source,destination (e.g. 0,2). Assume input is proper format.
         source_dest = input("Enter a source and destination peg [source,destination]: ")
         source, dest = map(int, source_dest.split(",")) 
-        legal_move = str(tower.move(source, dest))
-        print(legal_move)
+        
+        # Print	a message that contains	"True" if the move is legal	or a one that contains "False" otherwise
+        legal_move = tower.move(source, dest)
+        print(f"Move from {source} to {dest}: {legal_move}")
+
+        # Increase move count by 1 if move was legal
         if legal_move:
             num_moves += 1
-        else:
-            print("Illegal move")
+        # else:
+        #     print("Illegal move")
 
         tower.print_state()
         # print("\n")
@@ -370,6 +390,8 @@ def play_game():
     end_time = time.time()
     elapsed_time = round(end_time - start_time)
 
+    # When a goal state	is reached,	print a	victory	message, the number	of moves it	took to	solve the problem,	
+    # and the time in seconds it took to solve it.
     print(f"HOORAY! You won Tower of Hanoi in {num_moves} moves and it took you {elapsed_time} seconds!")
 
 def main():
