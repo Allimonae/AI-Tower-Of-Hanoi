@@ -362,7 +362,7 @@ def play_game():
         if legal_move:
             num_moves += 1
         else:
-            # print("Illegal move")
+            print("Illegal move")
 
         tower.print_state()
         # print("\n")
