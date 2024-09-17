@@ -30,7 +30,7 @@ class TowerOfHanoi:
         self.peg2 = []
 
         if number_of_disks < 1:
-            # print(f"Error: number of disks ({number_of_disks}) not allowed")
+            print(f"Error: number of disks ({number_of_disks}) not allowed")
         else:
             self.num_disks = number_of_disks
             # peg 0 initialized as a list containing specified number of disks, in consecutive descending order
@@ -51,19 +51,19 @@ class TowerOfHanoi:
         choose_peg = [self.peg0, self.peg1, self.peg2]
 
         if source not in [0, 1, 2] or destination not in [0, 1, 2]:
-            # print(f"Error: source peg ({source}) or destination peg ({destination}) out of range")
+            print(f"Error: source peg ({source}) or destination peg ({destination}) out of range")
             return False
 
         if source == destination:
-            # print(f"Error: source peg ({source}) == destination peg ({destination})")
+            print(f"Error: source peg ({source}) == destination peg ({destination})")
             return False
         
         if not choose_peg[source]:
-            # print(f"Error: source peg ({source}) is empty")
+            print(f"Error: source peg ({source}) is empty")
             return False
 
         if choose_peg[destination] and choose_peg[source][-1] > choose_peg[destination][-1]:
-            # print(f"Error: source disk size ({choose_peg[source][-1]}) is greater than destination disk size ({choose_peg[destination][-1]})")
+            print(f"Error: source disk size ({choose_peg[source][-1]}) is greater than destination disk size ({choose_peg[destination][-1]})")
             return False
         
         # Pop last element of source and append it to destination
@@ -110,7 +110,7 @@ class TowerOfHanoi:
         if self.num_disks:
             self.peg0 = list(range(self.num_disks, 0, -1))
         else:
-            # print(f"Error: number of disks not yet set")
+            print(f"Error: number of disks not yet set")
 
     def get_state(self):
         """Returns the current state of the Tower.
@@ -149,7 +149,7 @@ class TTTowerOfHanoi(TowerOfHanoi):
         self.peg2 = []
 
         if number_of_disks < 1:
-            # print(f"Error: number of disks ({number_of_disks}) not allowed")
+            print(f"Error: number of disks ({number_of_disks}) not allowed")
         else:
             self.num_disks = number_of_disks
             # peg 0 initialized as a list containing specified number of disks, 3 disks of each size
@@ -193,7 +193,7 @@ class TTTowerOfHanoi(TowerOfHanoi):
                 for n in range(3):
                     self.peg0.append(self.num_disks - i)
         else:
-            # print(f"Error: number of disks not yet set")
+            print(f"Error: number of disks not yet set")
 
 class SpecialDiskTowerOfHanoi(TowerOfHanoi):
     """There are three pegs, numbers 1-number of disks are used instead of disks, 
@@ -226,9 +226,9 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
         self.peg2 = []
 
         if number_of_disks < 1:
-            # print(f"Error: number of disks ({number_of_disks}) not allowed")
+            print(f"Error: number of disks ({number_of_disks}) not allowed")
         elif k > number_of_disks or k < 0:
-            # print(f"Error: k ({k}) out of range")
+            print(f"Error: k ({k}) out of range")
         else:
             self.num_disks = number_of_disks
             self.special = k
@@ -254,15 +254,15 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
         choose_peg = [self.peg0, self.peg1, self.peg2]
 
         if source not in [0, 1, 2] or destination not in [0, 1, 2]:
-            # print(f"Error: source peg ({source}) or destination peg ({destination}) out of range")
+            print(f"Error: source peg ({source}) or destination peg ({destination}) out of range")
             return False
 
         if source == destination:
-            # print(f"Error: source peg ({source}) == destination peg ({destination})")
+            print(f"Error: source peg ({source}) == destination peg ({destination})")
             return False
         
         if not choose_peg[source]:
-            # print(f"Error: source peg ({source}) is empty")
+            print(f"Error: source peg ({source}) is empty")
             return False
         
         source_disk = choose_peg[source][-1]
@@ -274,14 +274,14 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
         
         if dest_disk == "_":
             if isinstance(source_disk, int) and source_disk > self.special:
-                # print(f"Error: source disk size ({source_disk}) is greater than destination special disk size ({self.special})")
+                print(f"Error: source disk size ({source_disk}) is greater than destination special disk size ({self.special})")
                 return False
             choose_peg[destination].append(choose_peg[source].pop())
             return True
        
         if isinstance(dest_disk, int) and isinstance(source_disk, int):
             if source_disk > dest_disk:
-                # print(f"Error: source disk size ({source_disk}) is greater than destination disk size ({dest_disk})")
+                print(f"Error: source disk size ({source_disk}) is greater than destination disk size ({dest_disk})")
                 return False
         
         # Pop last element of source and append it to destination
@@ -327,7 +327,7 @@ class SpecialDiskTowerOfHanoi(TowerOfHanoi):
             self.peg0 = list(range(self.num_disks, 0, -1))
             self.peg1.append("_")
         else:
-            # print(f"Error: number of disks or k not yet set")
+            print(f"Error: number of disks or k not yet set")
 
 def play_game():
     version = input(
